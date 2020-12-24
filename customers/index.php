@@ -1,7 +1,7 @@
 <?php
     require_once('functions.php');
     index();
-   // unset($_SESSION['cepOrig']);
+ //   unset($_SESSION['lat2']);
 session_start();
 ?>
 
@@ -67,16 +67,16 @@ session_start();
 </table>
 <?php 
  // $row_set = array();
-  $row_set = validaCep();
+ // $row_set = validaCep();
  //   validaCep();
 	echo '<br>';
 //	echo 'LATIDUDE: '.$row_set->latitude;
 
   // foreach ($row_set as $r) { echo $r.'<br>';}
 	echo '<br>';
-	echo 'LATIDUDE: '.$row_set->latitude;
+	//echo 'LATIDUDE: '.$row_set->latitude;
 	echo '<br>';
-	echo 'LONGITUDE: '.$row_set->longitude;
+	//echo 'LONGITUDE: '.$row_set->longitude;
 	echo '<br>';
 /*
 */

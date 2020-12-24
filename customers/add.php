@@ -1,7 +1,7 @@
 
 <?php 
   require_once('functions.php'); 
-
+    
    if(isset ($_GET['cepOrigID']))
    if( 0 != $_GET['cepOrigID'] ) {
        
@@ -28,7 +28,6 @@
                $_SESSION['longt1']  = $_GET['longitude1'];
                $_SESSION['logra1']  = $_GET['rua1'];
                $_SESSION['cidade1'] = $_GET['cidade1'];
-            //   $_SESSION['estado1'] = $_GET['uf1'];
             }
        
    }
@@ -39,13 +38,19 @@
            //Alimenta variavel global
            $_SESSION['cepDID']  = $_GET['cepDID'];
            $_SESSION['cepD']    = $_GET['cepDID'];
-           $row_set             = validaCep($_SESSION['cepD'] );        
-           $_SESSION['lat2']    = $row_set->latitude;
-           $_SESSION['longt2']  = $row_set->longitude;
-           $_SESSION['logra2']  = $row_set->logradouro;
-           $_SESSION['cidade2'] = $row_set->cidade->nome;
-           $_SESSION['estado2'] = $row_set->estado->sigla;
-       } }else
+           $row_set             = validaCep($_SESSION['cepD'] );  
+           if( !empty($row_set) || "null" == ($row_set)){
+               $_SESSION['lat2']    = $row_set->latitude;
+               $_SESSION['longt2']  = $row_set->longitude;
+               $_SESSION['logra2']  = $row_set->logradouro;
+               $_SESSION['cidade2'] = $row_set->cidade->nome;
+               $_SESSION['estado2'] = $row_set->estado->sigla;
+           } else { ?> 
+           <script>              
+            alert("CEP Não Encontrado.");
+            limpa_formulário_cep(campo);  
+            </script> <?php }
+        } }else
            {
                $_SESSION['cepDID'] = $_GET['cepDID'];
                $_SESSION['cepD'] = $_GET['cepD'];  
@@ -55,7 +60,6 @@
                    $_SESSION['longt2']  = $_GET['longitude2'];
                    $_SESSION['logra2']  = $_GET['rua2'];
                    $_SESSION['cidade2'] = $_GET['cidade2'];
-                //   $_SESSION['estado2'] = $_GET['uf2'];
                 }
             }
   add();  
@@ -78,23 +82,6 @@
                 document.getElementById("uf"+campo).value="";              
     }
 
-    function meu_callback1(conteudo) {
-        if (!("erro" in conteudo)) 
-        {
-            //Atualiza os campos com os valores.
-            document.getElementById("latitude1").value=(conteudo.latitude);
-            document.getElementById("longitude1").value=(conteudo.longitude);
-            document.getElementById("rua1").value=(conteudo.logradouro);
-            document.getElementById("cidade1").value=(conteudo.cidade.nome);
-            document.getElementById("uf1").value=(conteudo.estado);
-           
-        }
-        else {
-            //CEP não Encontrado.
-          //  limpa_formulário_cep();
-            alert("CEP não encontrado.");
-        }
-    }
         
     function pesquisacep1(valor,campo) {
 
@@ -116,61 +103,26 @@
                     {
                     document.getElementById("cepDID").value=document.getElementById("cepD").value;
                     document.getElementById("cepOrigID").value="0";
-                    }
-                
-     //  $('#cepOrigID').val(cepOrig); 
+                    }                
                 
                 //Preenche os campos com "..." enquanto consulta webservice.
                 document.getElementById("latitude"+campo).value="Aguardando...";
                 document.getElementById("longitude"+campo).value="...";
                 document.getElementById("rua"+campo).value="...";
-                document.getElementById("cidade"+campo).value="...";
-            //    document.getElementById("uf"+campo).value="...";                
-                
+                document.getElementById("cidade"+campo).value="...";               
+                //Executa um submit de botão.
                 document.NomedoForm.submit(); 
                 //Cria um elemento javascript.
-                var script = document.createElement('script');
-              
-                //Sincroniza com o callback.
-             //   script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback1';
-               
-				
-                <?php  
-                     //   $cep = '89030500';
-                        //   var_dump($cep);
-                    //    $row_set = validaCep($cep); 
-                    //    $lat = $row_set->latitude;
-                    //    $longt = $row_set->longitude;
-                
-                ?>                
-          //  document.getElementById(lat).value=(<?php // echo $lat; ?>);
-          //  document.getElementById(longt).value=(<?php // echo $longt; ?>);
-        
-             //   lat.value = '<?php // $row_set->latitude; ?>';
-             //   longi.value = "<?php // $row_set->longitude; ?>";
-                    
-              //  script.value = "<?php // $lat; ?>";
-             //   scrip.value = "<?php // $rua; ?>";
-             //   meu_callback1(<?php //validaCep(); ?>);
-                
-           //     script = new Array(<?php// $row_set ?>); 
-         //   document.getElementById("latitude1").value=(lat);
-         //   document.getElementById("longitude1").value=(longi);
-                //Insere script no documento e carrega o conteúdo.
-              //  document.body.appendChild(script);
-                
-        //    document.getElementById("longitude1").innerHTML = (script.latitude);
-                
-        
-          //    $("#latitude1").val(script.latitude);
+                var script = document.createElement('script');              
             } 
-            else {
-                
-            limpa_formulário_cep(campo);
+            else {                
             alert("CEP invalido.");
+            limpa_formulário_cep(campo);
             }
         } 
-        else {
+        else {              
+            alert("CEP invalido.");
+            limpa_formulário_cep(campo);
         }
     };
       function submitform() {
@@ -180,32 +132,28 @@
     
     </head>
 <?php
-
+    $calc = 1; // Condição para calcular a distância. Caso algum dado não tenha então recebe zero(0) e não calcula
      if(isset ($_SESSION['cepOrigID'])) { $cepOrigID = $_SESSION['cepOrigID']; }else  $cepOrigID = "0";
-     if(isset ($_SESSION['cepOrig']))   { $cepOrig  = $_SESSION['cepOrig']; }   else  $cepOrig = "";
-     if(isset ($_SESSION['longt1']))    { $longt1   = $_SESSION['longt1']; }    else  $longt1 = "..";
-     if(isset ($_SESSION['lat1']))      { $lat1     = $_SESSION['lat1']; }      else  $lat1 = " ..";
-     if(isset ($_SESSION['logra1']))    { $rua1     = $_SESSION['logra1']; }    else  $rua1 = " ..";
-     if(isset ($_SESSION['cidade1']))   { $cidade1  = $_SESSION['cidade1']; }   else  $cidade1 = " ..";
-     if(isset ($_SESSION['estado1']))   { $estado1  = $_SESSION['estado1']; }   else  $estado1 = " ..";
+     if(isset ($_SESSION['cepOrig']))   { $cepOrig  = $_SESSION['cepOrig']; }   else  $cepOrig  = "";
+     if(isset ($_SESSION['longt1']))    { $longt1   = $_SESSION['longt1']; }    else { $longt1  = "";    $calc = 0;}
+     if(isset ($_SESSION['lat1']))      { $lat1     = $_SESSION['lat1']; }      else { $lat1    = "";    $calc = 0;}
+     if(isset ($_SESSION['logra1']))    { $rua1     = $_SESSION['logra1']; }    else  $rua1     = "..";
+     if(isset ($_SESSION['cidade1']))   { $cidade1  = $_SESSION['cidade1']; }   else  $cidade1  = "";
+     if(isset ($_SESSION['estado1']))   { $estado1  = $_SESSION['estado1']; }else  $estado1 = "";
 
 
-     if(isset ($_SESSION['cepDID']))    { $cepDID   = $_SESSION['cepDID']; } else  $cepDID = "0";
-     if(isset ($_SESSION['cepD']))      { $cepD     = $_SESSION['cepD']; }   else  $cepD = "";
-     if(isset ($_SESSION['longt2']))    { $longt2   = $_SESSION['longt2']; } else  $longt2 = "..";
-     if(isset ($_SESSION['lat2']))      { $lat2     = $_SESSION['lat2']; }   else  $lat2 = " ..";
-     if(isset ($_SESSION['logra2']))    { $rua2     = $_SESSION['logra2']; } else  $rua2 = " ..";
-     if(isset ($_SESSION['cidade2']))   { $cidade2  = $_SESSION['cidade2']; }else  $cidade2 = " ..";
-     if(isset ($_SESSION['estado2']))   { $estado2  = $_SESSION['estado2']; }else  $estado2 = " ..";
-/*
-echo "<br>CEP Origem ID".$_SESSION['cepOrigID'];
-echo "<br>CEP Origem".$_SESSION['cepOrig'];
-echo "<br>CEP lat1".$_SESSION['lat1'];
-echo "<br>CEP longt1".$_SESSION['longt1'];
-echo "<br>CEP cepD ID".$_SESSION['cepDID'];
-echo "<br>CEP cepD".$_SESSION['cepD'];
-echo "<br>CEP lat2".$_SESSION['lat2'];
-echo "<br>CEP longt2".$_SESSION['longt2'];*/
+     if(isset ($_SESSION['cepDID']))    { $cepDID   = $_SESSION['cepDID']; } else  $cepDID  = "0";
+     if(isset ($_SESSION['cepD']))      { $cepD     = $_SESSION['cepD']; }   else  $cepD    = "";
+    if(isset ($_SESSION['longt2']))    { $longt2   = $_SESSION['longt2']; } else { $longt2 = "";      $calc = 0;}
+     if(isset ($_SESSION['lat2']))      { $lat2     = $_SESSION['lat2']; }   else { $lat2   = "";     $calc = 0;}
+     if(isset ($_SESSION['logra2']))    { $rua2     = $_SESSION['logra2']; } else  $rua2    = "..";
+     if(isset ($_SESSION['cidade2']))   { $cidade2  = $_SESSION['cidade2']; }else  $cidade2 = "..";
+     if(isset ($_SESSION['estado2']))   { $estado2  = $_SESSION['estado2']; }else  $estado2 = "";
+
+        $distancia =  "0";
+        if (!is_numeric($lat1) || !is_numeric($longt1) || !is_numeric($lat2) || !is_numeric($longt2)) $calc = 0;
+        if( $calc == 1)
+         $distancia =   calcDistancia($lat1, $longt1, $lat2, $longt2);
     ?>
 <form action="add.php" name="NomedoForm" method="get" action=".">
   <div class="row col-md-6" >
@@ -217,13 +165,13 @@ echo "<br>CEP longt2".$_SESSION['longt2'];*/
     <!-- Inicio do formulario -->
        
         <label>Latitude:
-        <input name="latitude1" type="text" id="latitude1" size="20" value="<?php echo $lat1 ?>" /></label><br />
+        <input name="latitude1" type="text" id="latitude1" size="20" value="<?php echo $lat1 ?>" readonly/></label><br />
         <label>Longitude:
-        <input name="longitude1" type="text" id="longitude1" size="20" value="<?php echo $longt1 ?>" /></label><br />
+        <input name="longitude1" type="text" id="longitude1" size="20" value="<?php echo $longt1 ?>" readonly/></label><br />
         <label>Logradouro:
-        <input name="rua1" type="text" id="rua1" size="30"  value="<?php echo $rua1 ?>"/></label><br />
+        <input name="rua1" type="text" id="rua1" size="30"  value="<?php echo $rua1 ?>" readonly/></label><br />
         <label>Cidade:
-        <input name="cidade1" type="text" id="cidade1" size="30" value="<?php echo $cidade1." - ".$estado1 ?>"/></label><br />
+        <input name="cidade1" type="text" id="cidade1" size="30" value="<?php echo $cidade1." - ".$estado1 ?>" readonly/></label><br />
       
     </body>
  </div>
@@ -237,13 +185,13 @@ echo "<br>CEP longt2".$_SESSION['longt2'];*/
     <!-- Inicio do formulario -->
        
         <label>Latitude:
-        <input name="latitude2" type="text" id="latitude2" size="20"  value="<?php echo $lat2 ?>" /></label><br />
+        <input name="latitude2" type="text" id="latitude2" size="20"  value="<?php echo $lat2 ?>" readonly/></label><br />
         <label>Longitude:
-        <input name="longitude2" type="text" id="longitude2" size="20" value="<?php echo $longt2 ?>"  /></label><br />
+        <input name="longitude2" type="text" id="longitude2" size="20" value="<?php echo $longt2 ?>"  readonly/></label><br />
         <label>Logradouro:
-        <input name="rua2" type="text" id="rua2" size="30" value="<?php echo $rua2 ?>" /></label><br />
+        <input name="rua2" type="text" id="rua2" size="30" value="<?php echo $rua2 ?>" readonly/></label><br />
         <label>Cidade:
-        <input name="cidade2" type="text" id="cidade2" size="30" value="<?php echo $cidade2." - ".$estado2 ?>" /></label><br />
+        <input name="cidade2" type="text" id="cidade2" size="30" value="<?php echo $cidade2." - ".$estado2 ?>" readonly /></label><br />
       
     </body>
  </div>    
@@ -251,48 +199,41 @@ echo "<br>CEP longt2".$_SESSION['longt2'];*/
   <!-- area de campos do form -->
   <hr />
   <div class="row" >
-    <div class="form-group col-md-3">
+    <div class="form-group col-md-2">
       <label for="name">CEP de Origem</label>
       <input id="cepOrig" type="text" class="form-control"  value="<?php echo $cepOrig ?>" size="10" maxlength="9" onblur="pesquisacep1(this.value,1);" name="cepOrig">
-      <input id="cepOrigID"  name="cepOrigID"  type="TEXT" class="form-control"   value="<?php echo $cepOrigID ?>"/>
-      <input id="cepDID"     name="cepDID"     type="TEXT" class="form-control"   value="<?php echo $cepDID ?>" />
+      <input id="cepOrigID"  name="cepOrigID"  type="hidden" class="form-control"   value="<?php echo $cepOrigID ?>"/>
+      <input id="cepDID"     name="cepDID"     type="hidden" class="form-control"   value="<?php echo $cepDID ?>" />
     </div>
 
-    <div class="form-group col-md-3">
+    <div class="form-group col-md-2">
       <label for="campo2">CEP de Destino</label>
       <input id="cepD" type="text" class="form-control"  value="<?php echo $cepD ?>" size="10" maxlength="9"
                onblur="pesquisacep1(this.value,2);"  name="cepD">
     </div>
 
     <div class="form-group col-md-2">
-      <label for="campo3">Distância</label>
-      <input type="text" class="form-control" name="customer['dist']">
+      <label for="campo3">Distância em Km</label>
+      <input type="text" class="form-control" name="distancia"  value="<?php echo number_format($distancia, 2, ',', '.'); ?>" >
     </div>
   </div>  
   <div class="row">  
     <div class="form-group col-md-2">
       <label for="campo3">Data de Cadastro</label>
-      <input type="dateTimepiker" class="form-control" name="customer['criado']" value="<?php echo date("d/m/Y H:i"); ?>" disabled>
+      <input type="dateTimepiker" class="form-control" name="criado" value="<?php echo date("d/m/Y H:i"); ?>" disabled>
     </div>    
   </div>  
   
-  <div id="actions" class="row">
-    <div class="col-md-12">
-      <button type='hidden' id="btnValida"   class="btn btn-primary">Salvar</button>
-	    	<a class="btn btn-default" href="add.php"><i class="fa fa-refresh"></i> Atualizar</a>
-    
-    </div>
-  </div>
 </form>
 
 <form action="add.php" method="post" action=".">
   <!-- area de campos do form -->
   <hr />
   <div class="row" >
-      <input id="cepO" type="hidden" class="form-control"  value=""/>
-      <input id="cepD" type="hidden" class="form-control"  value="" />
-      <input type="hidden" class="form-control" name="customer['dist']"   value="" />
-      <input type="hidden" class="form-control" name="customer['criado']" value="<?php echo date("d/m/Y H:i"); ?>" disabled>
+      <input id="cepO" type="text" class="form-control" name="customer['cepOrig']" value="<?php echo $cepOrig ?>"/>
+      <input id="cepD" type="text" class="form-control" name="customer['cepDest']" value="<?php echo $cepD ?>" />
+      <input type="text" class="form-control" name="customer['dist']"   value="<?php echo number_format($distancia, 2, ',', '.'); ?>" />
+      <input type="text" class="form-control" name="customer['criado']" value="<?php echo date("d/m/Y H:i"); ?>" disabled>
   </div>  
   
   <div id="actions" class="row">
