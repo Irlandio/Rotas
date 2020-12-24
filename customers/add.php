@@ -4,6 +4,8 @@
 
    if(isset ($_GET['cepOrigID']))
    if( 0 != $_GET['cepOrigID'] ) {
+       
+       
        //Se não existe variavel global ou se consulta CEP difernte faz consulta no site e alimenta as variaveis
    if(!isset ($_SESSION['cepOrig']) || (isset($_SESSION['cepOrig']) && $_SESSION['cepOrig'] != $_GET['cepOrigID']))
        {
