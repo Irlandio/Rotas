@@ -75,22 +75,22 @@ function find_all( $table ) {
 function save($table = null, $data = null) {
 
   $database = open_database();
-
   $columns = null;
   $values = null;
-
-  //print_r($data);
-
+  print_r($data);
+ //   exit;
   foreach ($data as $key => $value) {
     $columns .= trim($key, "'") . ",";
     $values .= "'$value',";
   }
-
+//$table = "rede";
   // remove a ultima virgula
   $columns = rtrim($columns, ',');
   $values = rtrim($values, ',');
   
-  $sql = "INSERT INTO " . $table . "($columns)" . " VALUES " . "($values);";
+  print_r('<BR>'.'INSERT INTO ' .$table . "($columns)"  . " VALUES " . "($values);");
+  // exit;
+  $sql = "INSERT INTO " . $table . "($columns)"  . " VALUES " . "($values);";
 
   try {
     $database->query($sql);
@@ -99,8 +99,7 @@ function save($table = null, $data = null) {
     $_SESSION['type'] = 'success';
   
   } catch (Exception $e) { 
-  
-    $_SESSION['message'] = 'Nao foi possivel realizar a operacao.';
+    $_SESSION['message'] = 'Nao foi possivel realizar a operacao.<br>Linha: ' . __LINE__ . '<br>' . mysqli_error() . '<br>';
     $_SESSION['type'] = 'danger';
   } 
 

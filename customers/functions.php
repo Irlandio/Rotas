@@ -3,32 +3,32 @@
 require_once('../config.php');
 require_once(DBAPI);
 
-$customers = null;
-$customer = null;
+$ceps = null;
+$cep = null;
 
 /**
  *  Listagem de Clientes
  */
 function index() {
-	global $customers;
-	$customers = find_all('ceps');
+	global $ceps;
+	$ceps = find_all('ceps');
 }
 /**
  *  Cadastro de Clientes
  */
-function add() {
+function add($cePs) {
        
-    if(isset ($customer))
+    if(isset ($cePs))
         {
 
-      if (!empty($_POST['customer'])) {
+      if (!empty($cePs)) {
 
         $today = date_create('now', new DateTimeZone('America/Sao_Paulo'));
 
-        $customer = $_POST['customer'];
-        $customer['modificado'] = $customer['creado'] = $today->format("Y-m-d H:i:s");
+     //   $cePs = $_POST['cePs'];
+     //   $cePs['modificado'] = $cePs['criado'] = $today->format("Y-m-d H:i:s");
 
-        save('ceps', $customer);
+          save('ceps', $cePs);
         header('location: index.php');
       }
     }
@@ -45,17 +45,17 @@ function edit() {
 
     $id = $_GET['id'];
 
-    if (isset($_POST['customer'])) {
+    if (isset($_POST['cep'])) {
 
-      $customer = $_POST['customer'];
-      $customer['modified'] = $now->format("Y-m-d H:i:s");
+      $cep = $_POST['cep'];
+      $cep['modified'] = $now->format("Y-m-d H:i:s");
 
-      update('customers', $id, $customer);
+      update('ceps', $id, $cep);
       header('location: index.php');
     } else {
 
-      global $customer;
-      $customer = find('customers', $id);
+      global $cep;
+      $cep = find('ceps', $id);
     } 
   } else {
     header('location: index.php');
@@ -96,4 +96,7 @@ function validaCep($cep) {
 	$row_set = json_decode( $latlng );
     
   return $row_set;
+}
+function clear_messages(){
+    unset($_SESSION['message']);
 }

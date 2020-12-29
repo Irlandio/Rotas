@@ -1,8 +1,8 @@
 <?php
     require_once('functions.php');
     index();
- //   unset($_SESSION['lat2']);
-session_start();
+if (session_status() !== PHP_SESSION_ACTIVE) {//Verificar se a sessão não já está aberta.
+session_start();}
 ?>
 
 <?php include(HEADER_TEMPLATE); ?>
@@ -24,7 +24,7 @@ session_start();
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		<?php echo $_SESSION['message']; ?>
 	</div>
-	<?php clear_messages(); ?>
+	<?php clear_messages(); /// verificar?>
 <?php endif; ?>
 
 <hr>
@@ -41,18 +41,18 @@ session_start();
 	</tr>
 </thead>
 <tbody>
-<?php if ($customers) : ?>
-<?php foreach ($customers as $customer) : ?>
+<?php if ($ceps) : ?>
+<?php foreach ($ceps as $cep) : ?>
 	<tr>
-		<td><?php echo $customer['id']; ?></td>
-		<td><?php echo $customer['cepOrig']; ?></td>
-		<td><?php echo $customer['cepDest']; ?></td>
-		<td><?php echo $customer['dist']; ?></td>
-		<td><?php echo $customer['criado']; ?></td>
+		<td><?php echo $cep['id']; ?></td>
+		<td><?php echo $cep['cepOrig']; ?></td>
+		<td><?php echo $cep['cepDest']; ?></td>
+		<td><?php echo $cep['dist']; ?></td>
+		<td><?php echo $cep['criado']; ?></td>
 		<td class="actions text-right">
-			<a href="view.php?id=<?php echo $customer['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
-			<a href="edit.php?id=<?php echo $customer['id']; ?>" class="btn btn-sm btn-warning"><i class="fa fa-pencil"></i> Editar</a>
-			<a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-modal" data-customer="<?php echo $customer['id']; ?>">
+			<a href="view.php?id=<?php echo $cep['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+			<a href="edit.php?id=<?php echo $cep['id']; ?>" class="btn btn-sm btn-warning"><i class="fa fa-pencil"></i> Editar</a>
+			<a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-modal" data-cep="<?php echo $cep['id']; ?>">
 				<i class="fa fa-trash"></i> Excluir
 			</a>
 		</td>

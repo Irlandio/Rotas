@@ -2,7 +2,17 @@
 <?php require_once DBAPI; ?>
 
 <?php include(HEADER_TEMPLATE); ?>
-<?php $db = open_database(); ?>
+<?php $db = open_database(); 
+if(session_status() == 0) echo "Desabilitada ";
+if(session_status() == 1) echo "inexistente ";
+if(session_status() == 2) echo "Existente ";
+if (session_status() !== PHP_SESSION_ACTIVE) {//Verificar se a sessão não já está aberta.
+  session_start();
+if(session_status() == 0) echo "Agora Desabilitada ";
+if(session_status() == 1) echo "Agora inexistente ";
+if(session_status() == 2) echo "Agora Existente ";
+}
+?>
 
 <h1>Rotas</h1>
 <hr />
