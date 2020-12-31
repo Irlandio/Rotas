@@ -26,7 +26,7 @@ function add($cePs) {
         $today = date_create('now', new DateTimeZone('America/Sao_Paulo'));
 
      //   $cePs = $_POST['cePs'];
-     //   $cePs['modificado'] = $cePs['criado'] = $today->format("Y-m-d H:i:s");
+        $cePs['modificado'] = $cePs['criado'] = $today->format("Y-m-d H:i:s");
 
           save('ceps', $cePs);
         header('location: index.php');
@@ -48,7 +48,7 @@ function edit() {
     if (isset($_POST['cep'])) {
 
       $cep = $_POST['cep'];
-      $cep['modified'] = $now->format("Y-m-d H:i:s");
+      $cep['modificado'] = $now->format("Y-m-d H:i:s");
 
       update('ceps', $id, $cep);
       header('location: index.php');
@@ -62,6 +62,13 @@ function edit() {
   }
 }
 
+/**
+ *  Visualização de um Cliente
+ */
+function view($id = null) {
+  global $cep;
+  $cep = find('ceps', $id);
+}
 function calcDistancia($lat_inicial, $long_inicial, $lat_final, $long_final)
 {
     $d2r = 0.017453292519943295769236;

@@ -3,6 +3,8 @@
     index();
 if (session_status() !== PHP_SESSION_ACTIVE) {//Verificar se a sessão não já está aberta.
 session_start();}
+if(isset ($_SESSION['cepOrig'])) unset($_SESSION['cepOrig']);
+if(isset ($_SESSION['cepD'])) unset($_SESSION['cepD']);
 ?>
 
 <?php include(HEADER_TEMPLATE); ?>
@@ -35,8 +37,9 @@ session_start();}
 		<th>ID</th>
 		<th >Origem</th>
 		<th>Destino</th>
-		<th>Distância</th>
+		<th>Distância Km</th>
 		<th>Criado em</th>
+		<th>Modificado em</th>
 		<th>Opções</th>
 	</tr>
 </thead>
@@ -47,8 +50,9 @@ session_start();}
 		<td><?php echo $cep['id']; ?></td>
 		<td><?php echo $cep['cepOrig']; ?></td>
 		<td><?php echo $cep['cepDest']; ?></td>
-		<td><?php echo $cep['dist']; ?></td>
-		<td><?php echo $cep['criado']; ?></td>
+		<td><?php echo number_format($cep['dist'], 2, ',', '.'); ?></td>
+		<td><?php echo date("d/m/Y H:i", strtotime( $cep['criado'])); ?></td>
+		<td><?php echo date("d/m/Y H:i", strtotime( $cep['modificado'])); ?></td>
 		<td class="actions text-right">
 			<a href="view.php?id=<?php echo $cep['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
 			<a href="edit.php?id=<?php echo $cep['id']; ?>" class="btn btn-sm btn-warning"><i class="fa fa-pencil"></i> Editar</a>
