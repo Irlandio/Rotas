@@ -1,134 +1,16 @@
 
 <?php 
+
   require_once('functions.php'); 
     
 if (session_status() !== PHP_SESSION_ACTIVE) {//Verificar se a sessão não já está aberta.
-session_start();}
-   if(isset ($_GET['cepOrigID'])) 
-   {//Verifica se o primeiro ou o segundo Cep foi solicitado
-       if( 0 != $_GET['cepOrigID'] ) 
-       {//Se não existe variavel global ou se consulta CEP difernte faz consulta no site e alimenta as variaveis
-       if(!isset ($_SESSION['cepOrig']) || (isset($_SESSION['cepOrig']) && $_SESSION['cepOrig'] != $_GET['cepOrigID']))
-           {
-               //Alimenta variavel global
-               $_SESSION['cepOrigID']   = $_GET['cepOrigID'];
-               $_SESSION['cepOrig']     = $_GET['cepOrigID'];
-               $row_set                 = validaCep($_SESSION['cepOrig']);  
+session_start();
+}
+if(isset ($_GET['cepOrigID']))
+    verificaCamposGET();
 
-               if( !empty($row_set) ){
-                   $_SESSION['lat1']    = $row_set->latitude;
-                   $_SESSION['longt1']  = $row_set->longitude;
-                   $_SESSION['logra1']  = $row_set->logradouro;
-                   $_SESSION['cidade1'] = $row_set->cidade->nome.'-'.$row_set->estado->sigla;
-                 //  $_SESSION['estado1'] = $row_set->estado->sigla;
-               } else {                   
-                    if(1 ==1){
-                           $_SESSION['lat1']    = -30;
-                           $_SESSION['longt1']  = -54;
-                           $_SESSION['logra1']  = 'Rua Gustavo Salinger';
-                           $_SESSION['cidade1'] = 'Blumenal-SC';
-                          // $_SESSION['estado1'] = 'SC';
-                    }
-                    ?>                
-               <script>              
-                alert("CEP Não Encontrado.");
-                limpa_formulario_cep(campo);  
-                </script> 
-                <?php }
-            }
-        }else
-           {  //*** Se esse CEP não foi solicitado os campos recebem o mesmo anterior
-               $_SESSION['cepOrigID'] = $_GET['cepOrigID'];
-               $_SESSION['cepOrig'] = $_GET['cepOrig'];         
-
-                if( isset($_GET['latitude1'] )){
-                   $_SESSION['lat1']    = $_GET['latitude1'];
-                   $_SESSION['longt1']  = $_GET['longitude1'];
-                   $_SESSION['logra1']  = $_GET['rua1'];
-                   $_SESSION['cidade1'] = $_GET['cidade1'];
-                 //  $_SESSION['estado1'] = $_GET['estado1'];
-                }
-
-       }
-       if(isset ($_GET['cepDID']))
-       //Verifica se o primeiro ou o segundo Cep foi solicitado
-       if( 0 != $_GET['cepDID']){
-           if(!isset ($_SESSION['cepD']) || (isset($_SESSION['cepD']) && $_SESSION['cepD'] != $_GET['cepDID']))
-               {
-                   //Alimenta variavel global
-                   $_SESSION['cepDID']  = $_GET['cepDID'];
-                   $_SESSION['cepD']    = $_GET['cepDID'];
-                   $row_set             = validaCep($_SESSION['cepD'] );  
-                    if( !empty($row_set) ){
-                       $_SESSION['lat2']    = $row_set->latitude;
-                       $_SESSION['longt2']  = $row_set->longitude;
-                       $_SESSION['logra2']  = $row_set->logradouro;
-                       $_SESSION['cidade2'] = $row_set->cidade->nome.'-'.$row_set->estado->sigla;
-                 //    $_SESSION['estado2'] = $row_set->estado->sigla;
-                   } else { 
-                        if(1 ==1){
-                               $_SESSION['lat2']    = -7;
-                               $_SESSION['longt2']  = -15;
-                               $_SESSION['logra2']  = 'Rua Mchal Deodoro';
-                               $_SESSION['cidade2'] = 'Blumenal-SC';
-                            //   $_SESSION['estado2'] = 'SC';
-                        }
-          ?> 
-                   <script>              
-                    alert("CEP Não Encontrado.");
-                    limpa_formulario_cep(campo);  
-                    </script> <?php }
-                } }else
-                   {//*** Se esse CEP não foi solicitado os campos recebem o mesmo anterior
-                       $_SESSION['cepDID'] = $_GET['cepDID'];
-                       $_SESSION['cepD'] = $_GET['cepD'];  
-
-                        if( isset($_GET['latitude2'] )){
-                           $_SESSION['lat2']    = $_GET['latitude2'];
-                           $_SESSION['longt2']  = $_GET['longitude2'];
-                           $_SESSION['logra2']  = $_GET['rua2'];
-                           $_SESSION['cidade2'] = $_GET['cidade2'];
-                         //  $_SESSION['estado2'] = $_GET['estado2'];
-                        }
-                    }
-   }
-   if(isset ($_POST['cepOrig'])){
-       $cepOrig    = $_POST['cepOrig'];
-       $latd1      = $_POST['latd1'];
-       $longd1     = $_POST['longd1'];
-       
-       $cepDest = $_POST['cepDest'];
-       $latd2  = $_POST['latd2'];
-       $longd2 = $_POST['longd2'];
-       
-       $dist   = $_POST['dist'];
-       $criado = $_POST['criado'];
-       
-       $_SESSION['cepOrigID']   = $cepOrig;
-       $_SESSION['cepOrig']     = $cepOrig;
-       $_SESSION['lat1']        = $latd1;
-       $_SESSION['longt1']      = $longd1;
-       
-       $_SESSION['cepDID']  = $cepOrig;
-       $_SESSION['cepD']    = $cepOrig;
-       $_SESSION['lat2']    = $latd2;
-       $_SESSION['longt2']  = $longd2;       
-       $cePs = array(
-                     'cepOrig' => $cepOrig,
-                     'cepDest' => $cepDest,
-                     'dist'     => $dist,
-                     'criado'   => $criado,
-                     'modificado' => $criado,
-                     'endOrig'  => $_SESSION['logra1'].', '.$_SESSION['cidade1'].' - '.$_SESSION['estado1'],
-                     'endDest'  => $_SESSION['logra2'].', '.$_SESSION['cidade2'].' - '.$_SESSION['estado2'],
-                     'latO'     => $_SESSION['lat1'],
-                     'longO'    => $_SESSION['longt1'],
-                     'latD'     => $_SESSION['lat2'],
-                     'longD'    => $_SESSION['longt2']
-                     );      
-    add($cePs);  
-   }
-   
+   if(isset ($_POST['cepOrig']))
+   verificacamposPOST();
 ?>
 <?php include(HEADER_TEMPLATE); ?>
 
@@ -147,9 +29,7 @@ session_start();}
                 document.getElementById("cidade"+campo).value="";
                 document.getElementById("uf"+campo).value="";              
     }
-
     function pesquisacep1(valor,campo) {
-
         //Nova variável "cep" somente com dígitos.
         var cep = valor.replace(/\D/g, '');
         //Verifica se campo cep possui valor informado.
@@ -228,6 +108,7 @@ session_start();}
          $cepDID = "0";$cepD  = $lat2    =$longt2  = $rua2  = $cidade2  = "";
          }
          if($lat1 != "" && $lat2 != "" ) $desabled = ""; else $desabled = "disabled";
+
         if( $calc == 1)
          $distancia =   calcDistancia($lat1, $longt1, $lat2, $longt2);
     ?>
@@ -238,7 +119,7 @@ session_start();}
     <h4>Cep Origem</h4>
  </div>
     <body>
-    <!-- Inicio do formulario -->
+    <!-- Inicio do formulario GET (CONSULTA)-->
        
         <label>Latitude:
         <input name="latitude1" type="text" id="latitude1" size="20" value="<?php echo $lat1 ?>" readonly/></label><br />
@@ -248,6 +129,7 @@ session_start();}
         <input name="rua1" type="text" id="rua1" size="30"  value="<?php echo $rua1 ?>" readonly/></label><br />
         <label>Cidade:
         <input name="cidade1" type="text" id="cidade1" size="30" value="<?php echo $cidade1 ?>" readonly/></label><br />
+        <input name="endOrig" type="text" id="endOrig" size="30" value="<?php echo $end1 ?>" />
       
     </body>
  </div>
@@ -269,6 +151,7 @@ session_start();}
         <label>Cidade:
         <input name="cidade2" type="text" id="cidade2" size="30" value="<?php echo $cidade2 ?>" readonly /></label>
         <br />
+        <input name="endDest" type="text" id="endDest" size="30" value="<?php echo $end2 ?>" />
       
     </body>
  </div>    
@@ -304,7 +187,7 @@ session_start();}
 </form>
 
 <form action="add.php" method="post" >
-  <!-- area de campos do form -->
+    <!-- Inicio do formulario POST (CADASTRO)-->
   <hr />
   <div class="row" >
       <input id="cepO" type="hidden" class="form-control" name="cepOrig" value="<?php echo $cepOrig ?>"/>

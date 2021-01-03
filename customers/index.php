@@ -56,7 +56,7 @@ if(isset ($_SESSION['cepD'])) unset($_SESSION['cepD']);
 		<td class="actions text-right">
 			<a href="view.php?id=<?php echo $cep['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
 			<a href="edit.php?id=<?php echo $cep['id']; ?>" class="btn btn-sm btn-warning"><i class="fa fa-pencil"></i> Editar</a>
-			<a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-modal" data-cep="<?php echo $cep['id']; ?>">
+			<a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-modal" data-cep="<?php echo $cep['id']; ?>" data-cep1="<?php echo $cep['cepOrig']; ?>" data-cep2="<?php echo $cep['cepDest']; ?>">
 				<i class="fa fa-trash"></i> Excluir
 			</a>
 		</td>
@@ -70,18 +70,27 @@ if(isset ($_SESSION['cepD'])) unset($_SESSION['cepD']);
 </tbody>
 </table>
 <?php 
- // $row_set = array();
- // $row_set = validaCep();
- //   validaCep();
-	echo '<br>';
-//	echo 'LATIDUDE: '.$row_set->latitude;
-
-  // foreach ($row_set as $r) { echo $r.'<br>';}
-	echo '<br>';
-	//echo 'LATIDUDE: '.$row_set->latitude;
-	echo '<br>';
-	//echo 'LONGITUDE: '.$row_set->longitude;
-	echo '<br>';
 /*
 */
+  //  include('modal.php'); 
+?>
+<!-- Modal de Delete-->
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modalLabel">Excluir Cadastro</h4>
+      </div>
+      <div class="modal-body">
+        Deseja realmente excluir este Cadastro?
+      </div>
+      <div class="modal-footer">
+        <a id="confirm" class="btn btn-primary" href="#">Sim</a>
+        <a id="cancel" class="btn btn-default" data-dismiss="modal">N&atilde;o</a>
+      </div>
+    </div>
+  </div>
+</div> <!-- /.modal -->
+<?php 
 include(FOOTER_TEMPLATE); ?>

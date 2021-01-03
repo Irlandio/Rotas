@@ -51,4 +51,4 @@
 	</div>
 </div>
 
-<?php include(FOOTER_TEMPLATE); ?>
+<?php include(FOOTER_TEMPLATE); 
