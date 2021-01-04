@@ -246,19 +246,23 @@ function viacep($cep){
   return $xml;
 }
 //Alternativa pelo Google Maps. Ainda sem chave.
-function getLatLong($address)
+function getTomtom($address)
 {
 ?>
 <script src="http://maps.google.com/maps/api/js"></script>
 <?php
-$address = str_replace(" ", "+", $address);
- $key = 'AIzaSyCs8IbUMhiRZrIqM0_FmXe7rihpkynr8dQ';
+//$address = str_replace(" ", "+", $address);
+ $key = 'EUGFcRRt49sSGMQPtK3aVZGAqI9rw3ZF';
+    $Addr = $address;
   //  "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$key"
-$json = file_get_contents("https://maps.google.com/maps/api/geocode/json?address=$address&key=$key&amp;sensor=false");
+$json = file_get_contents("https://api.tomtom.com/geofencing/2/json?key=<$key>&address=$Addr");
 $json = json_decode($json);
- if( !empty($json) && 1==2){
-$lat = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
-$long = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+ if( !empty($json) && 1==12){
+//$lat = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+//$long = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+     $lat = $json->latitude;
+     $long = $json->longetude;
+     
  }else {$lat = 0; $long = 0; }
 $coord = array('latitude'=>$lat,'longitude'=>$long);
 return $json;
@@ -285,6 +289,7 @@ function consultaSite($getCep) {
                  
                 </script> 
                 <?php 
+                   if(1==1){
                  //  viacep($getCep);
                   $xml = viacep($getCep); 
                    
@@ -295,7 +300,7 @@ function consultaSite($getCep) {
                    // Substitui os espaços por + "Rua+Paulo+Guimarães,+São+Paulo+-+SP" conforme padrão 'maps.google.com'
                     $address = utf8_encode($addr); // Codifica para UTF-8 para não dar 'pau' no envio do parâmetro
                     //Opção de pesquisa pelo google maps. Chave desativada ainda.
-                    $xy = getLatLong($address);
+                  //  $xy = getLatLong($address);
                     // $exibe = print_r ($xy);
                     // $exibe = print_r ($xml);
                 if( !empty($xml) ){
@@ -303,7 +308,13 @@ function consultaSite($getCep) {
                    $_SESSION['longt']  = 0.00;
                    $_SESSION['logra']  = $xml->logradouro;
                    $_SESSION['cidade'] = $xml->localidade.'-'.$xml->uf;
-                   $_SESSION['ender'] = $xml->logradouro.', '.$xml->localidade.'-'.$xml->uf;
+                   $_SESSION['ender'] = $xml->logradouro.', '.$xml->localidade.', Santa Catarina, Brasil';
+                    
+                }
+                      
+                    $xy = getTomtom($_SESSION['ender']);
+                 //   $exibe = print_r ($xy);
+                    
                     
                }else
                 {               

@@ -81,6 +81,7 @@ if(isset ($_GET['cepOrigID']))
 <?php
         $calc = 1; 
         $distancia =  "0";
+            $end1 = "";   $end2 = "";
 // Condição para calcular a distância. Caso algum dado não tenha então recebe zero(0) e não calcula
      if(isset ($_SESSION['cepOrigID'])) { $cepOrigID = $_SESSION['cepOrigID']; }
      if(isset ($_SESSION['cepOrig']))   
@@ -88,9 +89,11 @@ if(isset ($_GET['cepOrigID']))
          if(isset ($_SESSION['longt1']))  { $longt1   = $_SESSION['longt1']; }    else { $longt1  = "";    $calc = 0;}
          if(isset ($_SESSION['lat1']))    { $lat1     = $_SESSION['lat1']; }      else { $lat1    = "";    $calc = 0;}
          if(isset ($_SESSION['logra1']))  { $rua1     = $_SESSION['logra1']; }    else  $rua1     = "..";
-         if(isset ($_SESSION['cidade1'])) { $cidade1  = $_SESSION['cidade1']; }   else  $cidade1  = "";
+         if(isset ($_SESSION['cidade1'])) { $cidade1  = $_SESSION['cidade1']; }   else  $cidade1  = ".";
        //  if(isset ($_SESSION['estado1'])) { $estado1  = $_SESSION['estado1']; }else  $estado1 = "";
-        $end1 = $rua1.', '.$cidade1;
+          $end1 = ";";
+          if(($cidade1 != "."))
+            $end1 = $rua1.', '.$cidade1;
 
          if(isset ($_SESSION['cepDID']))  { $cepDID   = $_SESSION['cepDID']; } else  $cepDID  = "0";
          if(isset ($_SESSION['cepD']))    { $cepD     = $_SESSION['cepD']; }   else  $cepD    = "";
