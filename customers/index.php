@@ -34,13 +34,13 @@ if(isset ($_SESSION['cepD'])) unset($_SESSION['cepD']);
 <table class="table table-hover">
 <thead>
 	<tr>
-		<th>ID</th>
+		<th>#</th>
 		<th >Origem</th>
 		<th>Destino</th>
 		<th>Distância Km</th>
 		<th>Criado em</th>
 		<th>Modificado em</th>
-		<th>Opções</th>
+		<th>#</th>
 	</tr>
 </thead>
 <tbody>
