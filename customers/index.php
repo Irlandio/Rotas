@@ -15,7 +15,7 @@ if(isset ($_SESSION['cepD'])) unset($_SESSION['cepD']);
 			<h2>Distâncias CEPs</h2>
 		</div>
 		<div class="col-sm-6 text-right h2">
-	    	<a class="btn btn-primary" href="add.php"><i class="fa fa-plus"></i> Nova Distância</a>
+	    	<a class="btn btn-primary" href="add.php"><i class="fa fa-plus"></i> New Distância</a>
 	    	<a class="btn btn-default" href="index.php"><i class="fa fa-refresh"></i> Atualizar</a>
 	    </div>
 	</div>
